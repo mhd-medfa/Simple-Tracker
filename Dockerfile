@@ -9,6 +9,9 @@ RUN apt-get update && apt-get install -y \
     bzip2 \
     libx11-6 \
     screen \
+    ffmpeg \
+    libsm6 \
+    libxext6  \
  && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user and switch to it
@@ -38,15 +41,13 @@ RUN conda install -y -c pytorch \
     "torchvision=0.6.0=py38_cu102" \
  && conda clean -ya
 RUN conda install -y -c conda-forge opencv && conda clean -ya
-RUN apt-get update
-RUN apt-get install ffmpeg libsm6 libxext6  -y
-
+RUN pip uninstall gdown -y && pip install gdown
 RUN cd ~/ && git clone https://github.com/mhd-medfa/Simple-Tracker.git
-RUN cd ~/'Simple-Tracker' && pwd && ls && pip install -qr requirements.txt
+RUN cd ~/'Simple-Tracker' && pip install -qr requirements.txt && gdown https://drive.google.com/uc?id=1SPFiokuoq7iJZH6oIZacvCNLRviNJaAx -O video.mkv
 
 RUN chown -R user:user ~/'Simple-Tracker'
 # Create a working directory
-WORKDIR ~/'Simple-Tracker'
+WORKDIR /home/user/'Simple-Tracker'
 
 
 # Set the default command to python3
